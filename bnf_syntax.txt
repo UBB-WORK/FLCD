@@ -1,0 +1,65 @@
+===============================================================================
+LANGUAGE SPECIFICATION: SensorScript
+===============================================================================
+
+{} -> 0 or more
+[] -> 0 or 1
+| -> or
+"" -> terminal
+
+-------------------------------------------------------------------------------
+1. LEXICAL RULES
+-------------------------------------------------------------------------------
+
+<letter> ::= "a" | "b" | "c" | ... | "z" | "A" | "B" | ... | "Z"
+<digit>  ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<non_zero_digit> ::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+<identifier> ::= <letter>{ <letter> | <digit> | "_" }
+
+<integer_literal> ::= "0"|["-"]<non_zero_digit>{<digit>}
+<string_literal>  ::= "\""{<any_character_except_quote>}"\""
+
+<type_simple> ::= "int"
+<keyword>     ::= "int" | "array" | "if" | "else" | "while" | "read" | "write"
+
+<rel_op> ::= "==" | "!=" | "<" | "<=" | ">" | ">="
+<add_op> ::= "+" | "-"
+<mul_op> ::= "*" | "/" | "%"
+
+<separator> ::= ";" | "," | "(" | ")" | "{" | "}" | "[" | "]"
+
+-------------------------------------------------------------------------------
+2. SYNTACTIC GRAMMAR
+-------------------------------------------------------------------------------
+
+<program> ::= "program" <identifier> "{" <declaration_list> <statement_list> "}"
+
+<declaration_list> ::= <declaration> <declaration_list> | ""
+<declaration>      ::= <type> <identifier> ";" | "array" "<" <type_simple> "," <integer_literal> ">" <identifier> ";"
+
+<type> ::= <type_simple>
+
+<statement_list> ::= <statement> <statement_list> | ""
+
+<statement> ::= <assignment_statement> | <conditional_statement> | <loop_statement> | <io_statement> | <compound_statement>
+
+<compound_statement> ::= "{" <statement_list> "}"
+
+<assignment_statement> ::= <variable_access> "=" <expression> ";"
+
+<variable_access> ::= <identifier> | <identifier> "[" <expression> "]"
+
+<conditional_statement> ::= "if" "(" <condition> ")" <compound_statement> | "if" "(" <condition> ")" <compound_statement> "else" <compound_statement>
+
+<loop_statement> ::= "while" "(" <condition> ")" <compound_statement>
+
+<io_statement> ::= "read" "(" <variable_access> ")" ";" | "write" "(" <expression> ")" ";"
+
+<condition> ::= <expression> <rel_op> <expression> | "(" <condition> ")"
+
+<expression> ::= <term> { <add_op> <term> }
+
+<term> ::= <factor> { <mul_op> <factor> }
+
+<factor> ::= <variable_access> | <integer_literal> | "(" <expression> ")"
