@@ -10,7 +10,7 @@
     write(<expression>);
     ```
 -   **Semantic Description**:
-    -   `read`: Ingests an integer value from standard input
+    -   `read`: Ingests an integer value from standard input or hardware part
     -   `write`: Evaluates an expression and dispatches the resulting integer to standard output
 -   **Domain Justification**: An IoT system must interface with physical hardware. Without dedicated I/O, the program cannot sample its environment or transmit safety signals.
 
@@ -89,7 +89,7 @@ if (currentTemp > 40) {
 #### Explanatory Example:
 
 ```c
-// Traverses a 5-element array to calculate total sum
+// Traverses a 5-element array to calculate total sum then compute the avg
 i = 0;
 sum = 0;
 while (i < 5) {
