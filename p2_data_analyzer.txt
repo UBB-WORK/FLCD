@@ -1,0 +1,48 @@
+sensor_node DataAnalyzer {
+    signal count;
+    signal index;
+    signal sum;
+    signal average;
+    signal max_val;
+    signal min_val;
+    signal current_reading;
+    buffer<signal, 10> history;
+
+    count = 10;
+    index = 0;
+    sum = 0;
+    max_val = -9999;
+    min_val = 9999;
+
+    monitor (index < count) {
+        sample(current_reading);
+        history[index] = current_reading;
+        sum = sum + current_reading;
+
+        detect (current_reading > max_val) {
+            max_val = current_reading;
+        }
+
+        detect (current_reading < min_val) {
+            min_val = current_reading;
+        }
+
+        index = index + 1;
+    }
+
+    average = sum / count;
+
+    detect (average > 50) {
+        emit(1); 
+    } otherwise {
+        emit(0); 
+    }
+
+    detect (max_val > 90) {
+        emit(99); 
+    }
+
+    emit(average);
+    emit(max_val);
+    emit(min_val);
+}

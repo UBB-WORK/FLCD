@@ -1,0 +1,19 @@
+sensor_node SimpleAlert {
+    signal threshold;
+    signal current_val;
+    signal is_safe;
+
+    threshold = 85;
+    is_safe = 1;
+
+    monitor (is_safe == 1) {
+        sample(current_val);
+
+        detect (current_val > threshold) {
+            emit(999); 
+            is_safe = 0; 
+        } otherwise {
+            emit(1); 
+        }
+    }
+}

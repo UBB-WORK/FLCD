@@ -2,9 +2,9 @@
 LANGUAGE SPECIFICATION: SensorScript
 ===============================================================================
 
-{} -> 0 or more
-[] -> 0 or 1
-| -> or
+{} -> 0 or more 
+[] -> 0 or 1 
+|  -> or
 "" -> terminal
 
 -------------------------------------------------------------------------------
@@ -15,13 +15,16 @@ LANGUAGE SPECIFICATION: SensorScript
 <digit>  ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 <non_zero_digit> ::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
-<identifier> ::= <letter>{ <letter> | <digit> | "_" }
+<identifier> ::= <letter> { <letter> | <digit> | "_" }
 
-<integer_literal> ::= "0"|["-"]<non_zero_digit>{<digit>}
-<string_literal>  ::= "\""{<any_character_except_quote>}"\""
+<integer_literal> ::= "0" | <non_zero_digit> { <digit> }
+<unary>           ::= [ "-" ] <factor>
+<term>            ::= <unary> { <mul_op> <unary> }
 
-<type_simple> ::= "int"
-<keyword>     ::= "int" | "array" | "if" | "else" | "while" | "read" | "write"
+<string_literal>  ::= "\"" { <any_character_except_quote> } "\""
+
+<type_simple> ::= "signal"
+<keyword>     ::= "sensor_node" | "signal" | "buffer" | "detect" | "otherwise" | "monitor" | "sample" | "emit"
 
 <rel_op> ::= "==" | "!=" | "<" | "<=" | ">" | ">="
 <add_op> ::= "+" | "-"
@@ -33,30 +36,27 @@ LANGUAGE SPECIFICATION: SensorScript
 2. SYNTACTIC GRAMMAR
 -------------------------------------------------------------------------------
 
-<program> ::= "program" <identifier> "{" <declaration_list> <statement_list> "}"
+<program> ::= "sensor_node" <identifier> "{" { <declaration> } { <statement> } "}"
 
-<declaration_list> ::= <declaration> <declaration_list> | ""
-<declaration>      ::= <type> <identifier> ";" | "array" "<" <type_simple> "," <integer_literal> ">" <identifier> ";"
+<declaration> ::= <type> <identifier> ";" | "buffer" "<" <type_simple> "," <integer_literal> ">" <identifier> ";"
 
 <type> ::= <type_simple>
 
-<statement_list> ::= <statement> <statement_list> | ""
-
 <statement> ::= <assignment_statement> | <conditional_statement> | <loop_statement> | <io_statement> | <compound_statement>
 
-<compound_statement> ::= "{" <statement_list> "}"
+<compound_statement> ::= "{" { <statement> } "}"
 
 <assignment_statement> ::= <variable_access> "=" <expression> ";"
 
 <variable_access> ::= <identifier> | <identifier> "[" <expression> "]"
 
-<conditional_statement> ::= "if" "(" <condition> ")" <compound_statement> | "if" "(" <condition> ")" <compound_statement> "else" <compound_statement>
+<conditional_statement> ::= "detect" "(" <condition> ")" <compound_statement> [ "otherwise" <compound_statement> ]
 
-<loop_statement> ::= "while" "(" <condition> ")" <compound_statement>
+<loop_statement> ::= "monitor" "(" <condition> ")" <compound_statement>
 
-<io_statement> ::= "read" "(" <variable_access> ")" ";" | "write" "(" <expression> ")" ";"
+<io_statement> ::= "sample" "(" <variable_access> ")" ";" | "emit" "(" <expression> ")" ";"
 
-<condition> ::= <expression> <rel_op> <expression> | "(" <condition> ")"
+<condition> ::= <expression> <rel_op> <expression>
 
 <expression> ::= <term> { <add_op> <term> }
 
