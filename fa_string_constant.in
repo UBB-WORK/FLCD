@@ -1,0 +1,8 @@
+STATES: S, M, F
+ALPHABET: ", [STR_CHARS]
+INITIAL: S
+FINAL: F
+TRANSITIONS:
+S, " -> M
+M, [STR_CHARS] -> M
+M, " -> F
