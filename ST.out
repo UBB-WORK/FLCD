@@ -1,5 +1,4 @@
 === Symbol Table (Hash Table) ===
-Bucket   7: ['"hello \'!@world"']
 Bucket  34: ['message']
 Bucket  37: ['readings']
 Bucket  88: ['temp_sensor']

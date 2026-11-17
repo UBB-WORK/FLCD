@@ -1,10 +1,13 @@
-sensor_node temp_sensor;
+sensor_node emp_sensor;
 buffer readings[10];
 
-monitor (temp_sensor) {
+emp_sensor = 1;
+readings = "orice;
+
+monitor (temp_sensor == 1) {
     detect (temp_sensor >= 100) {
         emit 1;
     } otherwise {
-        signal 0;
+        emit 0;
     }
 }
